@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expense Tracker</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="shortcut icon" href="./icons-expense-tracker.svg" type="image/x-icon">
+</head>
+
+<body>
+    <div class="box">
+        <h2 class="head">Expense Tracker</h2>
+        <form id="form">
+            <div class="items">
+                <p class="item-name">Item Name</p>
+                <input type="text" class="input" required id="item-name">
+            </div>
+            <div class="items">
+                <p class="item-name">Item Price</p>
+                <input type="number" class="input" required id="item-price">
+            </div>
+
+            <div class="btns">
+
+                <input type="submit" value="Add" class="submit">
+                <input class="submit" type="reset" id="reset">
+                <input class="submit" type="button" id="clear" value="Clear All">
+            </div>
+
+        </form>
+
+            <div class="results">
+                <div class="result_pre">
+                
+                </div>
+                </div>
+
+                <div class="total-price">
+
+                </div>
+
+    </div>
+
+
+  
+   
+</body>
+<script>
+    
+    function updateDisplay(items) {
+        let result_box = document.querySelector('.result_pre');
+        let totalbox = document.querySelector('.total-price');
+        
+        // Clear previous results
+        result_box.innerHTML = '';
+        let total = 0;
+
+        items.forEach(item => {
+            total += parseFloat(item.itemPrice);
+            
+            let item_pre = document.createElement('div');
+            item_pre.className = "items-pre";
+            item_pre.innerText = item.itemName;
+            result_box.appendChild(item_pre);
+
+            let item_price = document.createElement('div');
+            item_price.className = "items-price";
+            item_price.innerText = `$   ${item.itemPrice}`;
+            result_box.appendChild(item_price);
+        });
+
+        totalbox.innerText = `Total: $${total}`;
+    }
+
+    // Retrieve and display the initial list of items
+    var previousList = JSON.parse(localStorage.getItem('items')) || [];
+    updateDisplay(previousList);
+
+    // Handle form submission
+    let form = document.getElementById('form');
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        let item_name = document.getElementById('item-name').value;
+        let item_price = document.getElementById('item-price').value;
+
+        var data = {
+            itemName: item_name,
+            itemPrice: item_price
+        };
+
+        // Add the new item to the list and localStorage
+        previousList.push(data);
+        localStorage.setItem('items', JSON.stringify(previousList));
+
+        // Update the display with the new item
+        updateDisplay(previousList);
+
+        // Clear the input fields
+        form.reset();
+    });
+
+var clear=document.getElementById('clear');
+clear.addEventListener('click', function (e) {
+    
+    localStorage.removeItem('items');
+    location.reload();
+})
+
+</script>
+
+</html>
